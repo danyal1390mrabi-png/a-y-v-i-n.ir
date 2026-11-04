@@ -1,0 +1,40 @@
+/* پنل تماس گوگل میت — فقط از متغیرهای طراحی فعلی (app.css) استفاده می‌کند. */
+.meet-panel{position:fixed;z-index:9500;display:none;flex-direction:column;overflow:hidden;background:var(--card);color:var(--text);border:1px solid rgba(128,128,128,.22);box-shadow:0 24px 70px #0000008c;font-family:inherit;box-sizing:border-box}
+.meet-panel.mp-normal,.meet-panel.mp-max{display:flex}
+.meet-panel.mp-normal{inset-inline:0;bottom:0;height:min(46dvh,420px);border-radius:22px 22px 0 0;padding-bottom:var(--safe-b)}
+.meet-panel.mp-max{inset:0;border-radius:0;border:none;padding-top:var(--safe-t);padding-bottom:var(--safe-b)}
+@media(min-width:721px){.meet-panel.mp-normal{inset-inline:auto 16px;bottom:16px;width:380px;height:auto;max-height:70dvh;border-radius:22px;padding-bottom:0}}
+.mp-head{display:flex;align-items:center;gap:6px;padding:10px 10px 10px 12px;border-bottom:1px solid rgba(128,128,128,.18);flex-shrink:0}
+.mp-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.mp-title b{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-title span{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-ibtn{width:36px;height:36px;border-radius:12px;border:none;background:transparent;color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0}
+.mp-ibtn:active,.mp-ibtn:hover{background:#ffffff14}
+.mp-ibtn svg{width:19px;height:19px}
+.mp-ibtn.mp-close:hover{color:#ff6b6b}
+.mp-stage{display:none;flex:1;min-height:0}
+.meet-panel.has-embed .mp-stage{display:block}
+.meet-panel.has-embed .mp-fallback{display:none}
+.mp-stage>*{width:100%;height:100%;border:0}
+.mp-fallback{flex:1;min-height:0;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}
+.mp-fallback-icon{width:52px;height:52px;border-radius:50%;background:#2fe0b329;color:var(--accent2);display:flex;align-items:center;justify-content:center}
+.mp-fallback-icon svg{width:24px;height:24px}
+.mp-fallback h3{margin:0;font-size:15px;font-weight:800}
+.mp-fallback p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.9;max-width:320px}
+.mp-link{direction:ltr;max-width:100%;font-size:12px;color:#8ec5ff;word-break:break-all;background:var(--card2);border-radius:11px;padding:8px 11px}
+.mp-actions{display:flex;gap:8px;width:100%;max-width:320px;margin-top:4px}
+.mp-btn{flex:1;min-height:44px;padding:0 12px;border:none;border-radius:14px;font-family:inherit;font-size:13.5px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;text-align:center}
+.mp-btn.primary{background:linear-gradient(135deg,var(--accent2),#16a34a);color:#06170d}
+.mp-btn.secondary{background:var(--card2);color:var(--text);border:1px solid rgba(128,128,128,.22)}
+.mp-btn:active{opacity:.9}
+.meet-pill{position:fixed;z-index:9500;display:none;align-items:center;gap:9px;inset-inline-end:14px;bottom:calc(88px + var(--safe-b));max-width:calc(100vw - 28px);padding:9px 14px 9px 10px;border:none;border-radius:999px;background:linear-gradient(135deg,var(--accent2),#16a34a);color:#06170d;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer;box-shadow:0 10px 30px #0000006e}
+.meet-pill.show{display:flex}
+.meet-pill svg{width:18px;height:18px;flex-shrink:0}
+.meet-pill .mp-pill-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.meet-pill .mp-time{font-variant-numeric:tabular-nums;opacity:.8}
+.meet-pill .mp-pill-x{margin-inline-start:2px;width:22px;height:22px;border-radius:50%;background:#00000026;display:flex;align-items:center;justify-content:center;font-size:12px}
+
+.mp-notice{display:none;padding:7px 14px;font-size:11.5px;line-height:1.7;color:#ffb454;background:#ffab231a;border-bottom:1px solid rgba(255,171,35,.28);flex-shrink:0}
+.mp-stage{position:relative}
+.mp-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;pointer-events:none}
+.mp-stage iframe{display:block;background:#000}

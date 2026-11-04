@@ -1,0 +1,15 @@
+.earn-card{text-align:right;max-width:360px}
+.earn-balance{font-size:30px;font-weight:800;margin:6px 0 2px;background:linear-gradient(90deg,#8ec5ff,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.earn-sub{font-size:12px;color:var(--muted);margin-bottom:12px}
+.earn-row{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13.5px}
+.earn-row span:last-child{color:var(--muted);font-size:12.5px}
+.earn-bar{height:8px;border-radius:99px;background:var(--card2);overflow:hidden;margin:14px 0 6px}
+.earn-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px}
+.earn-note{font-size:12px;color:var(--muted);line-height:1.9;margin:6px 0 10px}
+.earn-btn{width:100%;padding:14px;min-height:48px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--accent2),#16a34a);color:#06170d;font:inherit;font-size:14.5px;font-weight:800;cursor:pointer;margin-top:6px}
+.earn-btn:disabled{opacity:.4;cursor:not-allowed}
+.earn-err{color:#ff6b6b;font-size:12.5px;min-height:16px;margin-top:6px}
+.earn-intro{text-align:center}
+.earn-intro .ei-emoji{font-size:46px}
+.earn-intro h2{font-size:18px;margin:6px 0 10px}
+.earn-intro p{font-size:13.5px;line-height:2;color:var(--text);margin:0 0 12px}

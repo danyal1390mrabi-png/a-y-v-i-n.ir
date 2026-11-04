@@ -1,0 +1,29 @@
+/* آیوین — نوار پیام به سبک تلگرام + صف ارسال آفلاین */
+footer.composer{align-items:center;gap:10px;padding:10px 12px;padding-bottom:calc(10px + var(--safe-b))}
+footer.composer .composer-bar{flex:1;min-width:0;display:flex;align-items:center;gap:6px;padding:5px 6px;border-radius:24px;background:var(--card);border:1px solid rgba(255,255,255,.07)}
+footer.composer .composer-bar textarea#msgInput{border:none!important;background:transparent!important;padding:9px 6px!important;box-shadow:none!important;border-radius:0!important}
+footer.composer .composer-bar button{width:38px;height:38px;min-height:38px;padding:0!important;border-radius:13px!important;border:none!important;box-shadow:none!important;background:transparent!important;color:var(--muted);font-size:0!important;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+footer.composer .composer-bar #attachBtn{background:rgba(43,138,255,.16)!important;color:var(--accent)}
+footer.composer .composer-bar #emojiBtn::before,footer.composer .composer-bar #attachBtn::before,footer.composer #micBtn::before{content:"";width:23px;height:23px;background:currentColor;-webkit-mask:center/contain no-repeat;mask:center/contain no-repeat}
+footer.composer .composer-bar #attachBtn::before{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.8%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9%22/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.8%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9%22/%3E%3C/svg%3E")}
+footer.composer .composer-bar #emojiBtn::before{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.8%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%229.5%22/%3E%3Cpath d=%22M8 14.5a5 5 0 0 0 8 0%22/%3E%3Cpath d=%22M9 9.5h.01M15 9.5h.01%22/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.8%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%229.5%22/%3E%3Cpath d=%22M8 14.5a5 5 0 0 0 8 0%22/%3E%3Cpath d=%22M9 9.5h.01M15 9.5h.01%22/%3E%3C/svg%3E")}
+footer.composer #micBtn::before{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.8%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%229%22 y=%222.5%22 width=%226%22 height=%2212%22 rx=%223%22/%3E%3Cpath d=%22M5 11.5a7 7 0 0 0 14 0M12 18.5V22%22/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.8%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%229%22 y=%222.5%22 width=%226%22 height=%2212%22 rx=%223%22/%3E%3Cpath d=%22M5 11.5a7 7 0 0 0 14 0M12 18.5V22%22/%3E%3C/svg%3E");width:24px;height:24px}
+footer.composer .composer-bar #attachBtn:disabled::before{animation:ayvSpin 1s linear infinite;opacity:.6}
+@keyframes ayvSpin{to{transform:rotate(360deg)}}
+footer.composer #micBtn,footer.composer #sendBtn,footer.composer #sendNoAiBtn{width:48px!important;height:48px!important;min-height:48px!important;padding:0!important;border-radius:50%!important;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+footer.composer #micBtn{background:var(--card)!important;border:1px solid rgba(255,255,255,.07)!important;color:var(--muted);font-size:0!important}
+footer.composer #micBtn.recording{background:linear-gradient(135deg,#ff5c5c,#e63946)!important;color:#fff}
+footer.composer:not(.has-text) #sendBtn,footer.composer:not(.has-text) #sendNoAiBtn{display:none!important}
+footer.composer.has-text #micBtn{display:none!important}
+.attach-menu{width:268px;right:-8px;bottom:calc(100% + 16px);padding:8px;border-radius:20px;background:var(--card);border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 50px #000000a6}
+.attach-menu.open{gap:0}
+.attach-option{min-height:52px!important;padding:0 14px!important;gap:16px!important;font-size:15px!important;border-radius:13px!important;color:var(--text)!important}
+.attach-option .attach-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.attach-option .attach-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.msg-row.pending .msg-bubble{opacity:.78;white-space:pre-wrap}
+.msg-row.pending.failed .msg-bubble{outline:1.5px solid #ff6b6b}
+.pending-meta{font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:10px;align-items:center}
+.msg-row.pending.failed .pending-meta{color:#ff8080;cursor:pointer}
+.pending-meta button{background:none;border:none;color:inherit;font:inherit;cursor:pointer;padding:0;text-decoration:underline}
+#outboxBar{display:none;padding:7px 14px;font-size:12px;text-align:center;color:#ffd27a;background:rgba(255,171,35,.12);border-top:1px solid rgba(255,171,35,.25);flex-shrink:0}
+#outboxBar.show{display:block}

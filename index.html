@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<script>try{if(location.protocol==="http:"&&!/^(localhost|127\.|192\.168\.)/.test(location.hostname)){location.replace("https://"+location.host+location.pathname+location.search+location.hash)}}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
+<title>آیوین</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f0c29">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/meet-panel.css">
+<link rel="stylesheet" href="css/features.css">
+<link rel="stylesheet" href="css/explore.css">
+<link rel="stylesheet" href="css/page.css">
+<link rel="stylesheet" href="css/composer.css">
+<link rel="stylesheet" href="css/earnings.css">
+<link rel="stylesheet" href="css/chatlist.css">
+</head>
+<body>
+
+<div id="pageFrame"></div>
+
+<div id="app">
+
+  <!-- ============ ROOMS SCREEN ============ -->
+  <div id="roomsScreen" style="display:none;">
+    <div class="home-shell">
+      <div class="home-topbar">
+        <button class="home-fab" id="homeFabBtn" title="ساخت اتاق جدید">+</button>
+        <div class="home-title">💬 آیوین</div>
+        <button class="home-menu-btn" id="homeMenuBtn" title="تنظیمات">☰</button>
+      </div>
+
+      <!-- ---- CHATS SECTION ---- -->
+      <div class="home-section active" id="homeSectionChats">
+        <div class="switcher-tabs" id="homeTabs">
+          <button class="switcher-tab" data-hometab="groups">گروه‌های من</button>
+          <button class="switcher-tab" data-hometab="users">چت‌های خصوصی</button>
+          <button class="switcher-tab active" data-hometab="all">همه</button>
+        </div>
+
+        <div class="home-scroll">
+          <div id="homeGroupsPane" style="display:none;">
+            <div id="roomsList"></div>
+            <div class="home-section-label" style="margin-top:14px;">📢 کانال‌های من</div>
+            <div id="homeGroupsChannels"></div>
+            <button class="submit-btn" id="showCreateRoomBtn" style="margin-top:14px;">+ ساخت اتاق جدید</button>
+
+            <div id="createRoomForm" style="display:none; margin-top:14px;">
+              <input id="roomNameInput" type="text" placeholder="اسم اتاق (انگلیسی)" maxlength="30" autocomplete="off">
+              <input id="roomPasswordInput" type="text" placeholder="پسورد (اختیاری)" maxlength="30" autocomplete="off">
+              <input id="roomBioInput" type="text" placeholder="بیوگرافی گروه (الزامی)" maxlength="150" autocomplete="off">
+              <button type="button" class="modal-close ayv-pick" id="roomAvatarBtn">🖼️ عکس گروه (الزامی)</button>
+              <input id="roomAvatarFile" type="file" accept="image/*" style="display:none">
+              <div class="ai-select-label">دستیار هوش مصنوعی گروه (اختیاری)</div>
+              <select id="roomAiSelect"><option value="">— بدون هوش مصنوعی —</option></select>
+              <button class="submit-btn" id="createRoomBtn">ساخت و ورود به اتاق</button>
+            </div>
+          </div>
+
+          <div id="homeUsersPane" style="display:none;"></div>
+
+          <div id="homeAllPane">
+            <div class="home-section-label">👥 گروه‌های من</div>
+            <div id="homeAllGroups"></div>
+            <div class="home-section-label">📢 کانال‌های من</div>
+            <div id="homeAllChannels"></div>
+            <div class="home-section-label">👤 چت‌های خصوصی</div>
+            <div id="homeAllUsers"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- ACTIVE GROUPS SECTION (همه‌ی گروه‌ها، برای عضو شدن) ---- -->
+      <div class="home-section" id="homeSectionActiveGroups">
+        <div class="home-search"><span class="home-search-icon">🔍</span><input class="page-search-input" data-target="activeGroupsList" type="text" placeholder="جستجوی گروه..." autocomplete="off"></div>
+        <div class="home-scroll">
+          <div class="home-placeholder" style="padding:10px 4px; text-align:right; color:var(--muted); font-size:12px;">هر گروهی رو لمس کنی می‌تونی پیام‌هاش رو ببینی؛ برای ارسال پیام باید عضو بشی.</div>
+          <div id="activeGroupsList"></div>
+        </div>
+      </div>
+
+      <!-- ---- ACTIVE CHANNELS SECTION ---- -->
+      <div class="home-section" id="homeSectionChannels">
+        <div class="home-search"><span class="home-search-icon">🔍</span><input class="page-search-input" data-target="activeChannelsList" type="text" placeholder="جستجوی کانال..." autocomplete="off"></div>
+        <div class="home-scroll">
+          <div id="activeChannelsList"><div class="home-placeholder">در حال بارگذاری کانال‌ها...</div></div>
+        </div>
+      </div>
+
+      <!-- ---- CALLS SECTION (تماس داخل برنامه + گوگل میت) ---- -->
+      <div class="home-section" id="homeSectionCalls">
+        <div class="home-scroll">
+          <div class="call-guide">
+            <div class="call-guide-icon">📞</div>
+            <div class="call-guide-title">تماس درون‌برنامه‌ای آیوین</div>
+            <p class="call-guide-desc">
+              بدون خروج از آیوین، با هر شخص یا گروه تماس تصویری و صوتی بگیر. همه‌چیز داخل خود برنامه باز می‌شه و نیازی به نصب برنامه‌ی دیگه نیست.
+            </p>
+            <div class="call-guide-step">
+              <span class="cgs-num">۱</span>
+              <span class="cgs-text">وارد گفتگوی شخص یا گروه مورد نظر شو.</span>
+            </div>
+            <div class="call-guide-step">
+              <span class="cgs-num">۲</span>
+              <span class="cgs-text">بالای صفحه روی دکمه‌ی <b>📞 تماس داخل برنامه</b> بزن؛ تماس همون‌جا داخل آیوین شروع می‌شه.</span>
+            </div>
+            <div class="call-guide-step">
+              <span class="cgs-num">۳</span>
+              <span class="cgs-text">یک دعوت به تماس برای طرف مقابل (یا همه‌ی اعضای گروه) فرستاده می‌شه؛ با زدن روی دعوت، وارد تماس می‌شن.</span>
+            </div>
+            <div class="call-guide-step">
+              <span class="cgs-num">۴</span>
+              <span class="cgs-text">پنل تماس رو می‌تونی کوچک کنی و هم‌زمان چت کنی، یا بزرگش کنی تا تمام‌صفحه ببینی.</span>
+            </div>
+          </div>
+          <div class="call-guide call-guide-alt">
+            <div class="call-guide-icon">📹</div>
+            <div class="call-guide-title">گزینه‌ی دوم: گوگل میت</div>
+            <p class="call-guide-desc">
+              اگه دوست داری تماست با گوگل میت باشه، بالای صفحه‌ی گفتگو روی <b>🎥 تماس</b> بزن، لینک جلسه‌ی میت رو کپی کن و داخل پاپ‌آپ آیوین بچسبون؛ لینک برای طرف مقابل یا گروه فرستاده می‌شه.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- CONTACTS SECTION (فقط کاربرانی که ثبت‌نام کردن) ---- -->
+      <div class="home-section" id="homeSectionContacts">
+        <div class="home-search"><span class="home-search-icon">🔍</span><input class="page-search-input" data-target="homeContactsWrap" type="text" placeholder="جستجوی مخاطبین..." autocomplete="off"></div>
+        <div class="home-scroll" id="homeContactsWrap">
+          <div class="home-section-label">🤖 دستیارهای هوش مصنوعی</div>
+          <div id="homeContactsAi"></div>
+          <div class="home-section-label">👤 کاربران</div>
+          <div id="homeContactsList"></div>
+        </div>
+      </div>
+
+      <!-- ---- GAMES SECTION ---- -->
+      <div class="home-section" id="homeSectionGames">
+        <style>
+          #homeSectionGames .gm-wrap { padding: 6px 2px 24px; }
+          #homeSectionGames .gm-head { text-align: center; margin: 6px 0 16px; }
+          #homeSectionGames .gm-title {
+            font-size: 20px; font-weight: 800; letter-spacing: .2px;
+            background: linear-gradient(90deg, #22d3ee, #a78bfa, #f472b6);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+          }
+          #homeSectionGames .gm-sub { margin-top: 6px; font-size: 12.5px; color: var(--muted, #9aa0b4); }
+          #homeSectionGames .gm-grid {
+            display: grid; gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          }
+          #homeSectionGames .gm-btn {
+            position: relative; overflow: hidden; isolation: isolate;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 8px; padding: 18px 10px 14px; min-height: 164px;
+            border-radius: 20px; text-decoration: none; color: #fff;
+            background:
+              radial-gradient(120% 90% at 50% 0%, rgba(255,255,255,.16), transparent 60%),
+              linear-gradient(150deg, var(--g1), var(--g2));
+            border: 1px solid rgba(255,255,255,.18);
+            box-shadow: 0 8px 20px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.22);
+            transition: transform .18s ease, box-shadow .22s ease, filter .2s ease;
+            -webkit-tap-highlight-color: transparent;
+          }
+          #homeSectionGames .gm-btn::before {
+            content: ""; position: absolute; inset: 0; z-index: -1;
+            background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.28) 50%, transparent 65%);
+            transform: translateX(-120%); transition: transform .6s ease;
+          }
+          #homeSectionGames .gm-btn:hover,
+          #homeSectionGames .gm-btn:focus-visible {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 0 26px var(--glow), 0 12px 26px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.3);
+            filter: saturate(1.15);
+            outline: none;
+          }
+          #homeSectionGames .gm-btn:hover::before,
+          #homeSectionGames .gm-btn:focus-visible::before { transform: translateX(120%); }
+          #homeSectionGames .gm-btn:active { transform: scale(.96); }
+          #homeSectionGames .gm-icon {
+            font-size: 40px; line-height: 1;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,.45));
+          }
+          #homeSectionGames .gm-name {
+            font-size: 14px; font-weight: 800; text-align: center; line-height: 1.35;
+            text-shadow: 0 2px 6px rgba(0,0,0,.5);
+          }
+          #homeSectionGames .gm-tag {
+            font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+            background: rgba(0,0,0,.32); border: 1px solid rgba(255,255,255,.18);
+          }
+          #homeSectionGames .gm-play {
+            margin-top: 4px; font-size: 12.5px; font-weight: 800; padding: 7px 16px;
+            border-radius: 999px; background: rgba(255,255,255,.95); color: #111;
+            box-shadow: 0 4px 12px rgba(0,0,0,.35);
+          }
+          #homeSectionGames .gm-note {
+            margin-top: 18px; text-align: center; font-size: 11.5px; color: var(--muted, #9aa0b4);
+          }
+          @media (prefers-reduced-motion: reduce) {
+            #homeSectionGames .gm-btn, #homeSectionGames .gm-btn::before { transition: none; }
+          }
+        </style>
+        <div class="home-scroll">
+          <div class="gm-wrap">
+            <div class="gm-head">
+              <div class="gm-title">🎮 بازی‌های آنلاین</div>
+              <div class="gm-sub">یکی رو انتخاب کن و شروع کن!</div>
+            </div>
+            <div class="gm-grid">
+            <a class="gm-btn" href="https://www.crazygames.com/game/bloxdhop-io" target="_blank" rel="noopener noreferrer" style="--g1:#7c3aed;--g2:#2563eb;--glow:rgba(124,58,237,.65);">
+              <span class="gm-icon">🧱</span>
+              <span class="gm-name" dir="ltr">Bloxd Hop.io</span>
+              <span class="gm-tag">پارکور بلوکی</span>
+              <span class="gm-play">▶ بازی کن</span>
+            </a>
+            <a class="gm-btn" href="https://www.crazygames.com/game/crazy-chameleon" target="_blank" rel="noopener noreferrer" style="--g1:#16a34a;--g2:#84cc16;--glow:rgba(132,204,22,.6);">
+              <span class="gm-icon">🦎</span>
+              <span class="gm-name" dir="ltr">Crazy Chameleon</span>
+              <span class="gm-tag">آفتاب‌پرست دیوانه</span>
+              <span class="gm-play">▶ بازی کن</span>
+            </a>
+            <a class="gm-btn" href="https://www.crazygames.com/game/bloxity-io" target="_blank" rel="noopener noreferrer" style="--g1:#0ea5e9;--g2:#6366f1;--glow:rgba(14,165,233,.65);">
+              <span class="gm-icon">🏙️</span>
+              <span class="gm-name" dir="ltr">Bloxity.io</span>
+              <span class="gm-tag">شهر بلوکی</span>
+              <span class="gm-play">▶ بازی کن</span>
+            </a>
+            <a class="gm-btn" href="https://www.crazygames.com/game/count-masters-stickman-games" target="_blank" rel="noopener noreferrer" style="--g1:#ef4444;--g2:#f97316;--glow:rgba(249,115,22,.65);">
+              <span class="gm-icon">🏃</span>
+              <span class="gm-name" dir="ltr">Count Masters</span>
+              <span class="gm-tag">نبرد استیک‌من‌ها</span>
+              <span class="gm-play">▶ بازی کن</span>
+            </a>
+            <a class="gm-btn" href="https://www.crazygames.com/game/designville-merge-design" target="_blank" rel="noopener noreferrer" style="--g1:#ec4899;--g2:#a855f7;--glow:rgba(236,72,153,.6);">
+              <span class="gm-icon">🛋️</span>
+              <span class="gm-name" dir="ltr">Designville</span>
+              <span class="gm-tag">ادغام و دکور</span>
+              <span class="gm-play">▶ بازی کن</span>
+            </a>
+            <a class="gm-btn" href="https://www.crazygames.com/game/traffic-rider-vvq" target="_blank" rel="noopener noreferrer" style="--g1:#f59e0b;--g2:#dc2626;--glow:rgba(245,158,11,.65);">
+              <span class="gm-icon">🏍️</span>
+              <span class="gm-name" dir="ltr">Traffic Rider</span>
+              <span class="gm-tag">موتورسواری</span>
+              <span class="gm-play">▶ بازی کن</span>
+            </a>
+            <a class="gm-btn" href="https://www.crazygames.com/game/table-tennis-world-tour" target="_blank" rel="noopener noreferrer" style="--g1:#14b8a6;--g2:#3b82f6;--glow:rgba(20,184,166,.65);">
+              <span class="gm-icon">🏓</span>
+              <span class="gm-name" dir="ltr">Table Tennis World Tour</span>
+              <span class="gm-tag">تنیس روی میز</span>
+              <span class="gm-play">▶ بازی کن</span>
+            </a>
+            <a class="gm-btn" href="https://www.crazygames.com/game/dig-out-of-prison" target="_blank" rel="noopener noreferrer" style="--g1:#64748b;--g2:#1e293b;--glow:rgba(148,163,184,.55);">
+              <span class="gm-icon">⛏️</span>
+              <span class="gm-name" dir="ltr">Dig Out of Prison</span>
+              <span class="gm-tag">فرار از زندان</span>
+              <span class="gm-play">▶ بازی کن</span>
+            </a>
+            </div>
+            <div class="gm-note">بازی‌ها در تب جدید باز می‌شوند.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- EXPLORE SECTION ---- -->
+      <div class="home-section" id="homeSectionExplore">
+        <button type="button" class="ex-refresh" id="exploreRefreshBtn" title="پست‌های جدید" aria-label="پست‌های جدید">🔄</button>
+        <div class="explore-feed" id="exploreFeed"></div>
+      </div>
+
+      <!-- ---- SETTINGS SECTION ---- -->
+      <div class="home-section" id="homeSectionSettings">
+        <div class="home-scroll">
+          <div class="settings-profile-row" id="settingsProfileRow">
+            <span class="avatar big" id="settingsAvatar">؟</span>
+            <div>
+              <div class="settings-profile-name" id="settingsName">مهمان</div>
+              <div class="settings-profile-sub">مشاهده پروفایل</div>
+            </div>
+          </div>
+          <div class="settings-item" data-setting="account"><span class="si-icon">👤</span><span class="si-label">حساب کاربری</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item" data-setting="mypage"><span class="si-icon">📄</span><span class="si-label">صفحه‌ی من</span><span class="si-tag">پست‌ها و آمار</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item" data-setting="createEntity"><span class="si-icon">➕</span><span class="si-label">ساخت گروه / کانال</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item" data-setting="invite"><span class="si-icon">👥</span><span class="si-label">معرفی کردن دوستان</span><span class="si-tag">✔ تیک آبی</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item" data-setting="notifications"><span class="si-icon">🔔</span><span class="si-label">اعلان‌ها</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item" data-setting="sms"><span class="si-icon">📩</span><span class="si-label">اعلان پیامکی</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item" data-setting="privacy"><span class="si-icon">🔒</span><span class="si-label">حریم خصوصی</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item" data-setting="theme"><span class="si-icon">🌙</span><span class="si-label">ظاهر برنامه</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item" data-setting="language"><span class="si-icon">🌐</span><span class="si-label">زبان</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item" data-setting="storage"><span class="si-icon">💾</span><span class="si-label">ذخیره‌سازی</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item" data-setting="about"><span class="si-icon">ℹ️</span><span class="si-label">درباره برنامه</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item settings-item-danger" data-setting="deleteAccount"><span class="si-icon">🗑️</span><span class="si-label">پاک کردن حساب</span><span class="si-chevron">‹</span></div>
+          <div class="settings-item settings-item-danger" data-setting="logout"><span class="si-icon">🚪</span><span class="si-label">خروج از حساب</span><span class="si-chevron">‹</span></div>
+        </div>
+      </div>
+
+      <div class="login-error" id="roomsError" style="padding:0 16px;"></div>
+    </div>
+
+    <nav class="bottom-nav" id="bottomNav">
+      <button class="bn-item active" data-bntab="chats"><span class="bn-icon">💬</span><span>گفتگوها</span></button>
+      <button class="bn-item" data-bntab="explore"><span class="bn-icon">🧭</span><span>اکسپلور</span></button>
+      <button class="bn-item" data-bntab="activeGroups"><span class="bn-icon">🌐</span><span>گروه‌های فعال</span></button>
+      <button class="bn-item" data-bntab="channels"><span class="bn-icon">📢</span><span>کانال‌های فعال</span></button>
+      <button class="bn-item" data-bntab="calls"><span class="bn-icon">📞</span><span>تماس‌ها</span></button>
+      <button class="bn-item" data-bntab="contacts"><span class="bn-icon">👤</span><span>مخاطبین</span></button>
+      <button class="bn-item" data-bntab="games"><span class="bn-icon">🎮</span><span>بازی‌های آنلاین</span></button>
+      <button class="bn-item" data-bntab="settings"><span class="bn-icon">⚙️</span><span>تنظیمات</span></button>
+    </nav>
+  </div>
+
+  <!-- ============ ROOM PASSWORD SCREEN ============ -->
+  <div id="roomPasswordScreen" style="display:none;">
+    <div class="login-card">
+      <h1>🔒 اتاق قفل‌شده</h1>
+      <p id="roomPasswordName"></p>
+      <input id="roomPasswordCheckInput" type="text" placeholder="پسورد اتاق" maxlength="30" autocomplete="off">
+      <button class="submit-btn" id="roomPasswordSubmitBtn">ورود به اتاق</button>
+      <button class="submit-btn" id="roomPasswordBackBtn" style="background:rgba(255,255,255,0.08); margin-top:10px;">بازگشت</button>
+      <div class="login-error" id="roomPasswordError"></div>
+    </div>
+  </div>
+
+  <!-- ============ LOGIN SCREEN ============ -->
+  <div id="loginScreen" style="display:none;">
+    <div class="login-card">
+      <h1>✈️ ورود به آیوین</h1>
+      <p>برای شروع، ثبت‌نام کن و اطلاعاتت رو کامل کن</p>
+      <div class="signup-avatar-wrap">
+        <button type="button" class="signup-avatar" id="signupAvatarBtn" aria-label="انتخاب عکس پروفایل"><span id="signupAvatarHint">📷</span></button>
+        <div class="signup-avatar-label">عکس پروفایل (الزامی)</div>
+        <input id="signupAvatarFile" type="file" accept="image/*" style="display:none">
+      </div>
+      <input id="nameInput" type="text" placeholder="اسم" maxlength="20" autocomplete="off">
+      <input id="usernameInput" type="text" placeholder="یوزرنیم (انگلیسی)" maxlength="20" autocomplete="off">
+      <input id="phoneInput" type="tel" placeholder="شماره موبایل (در مرحله‌ی بعد تایید می‌شه)" maxlength="15" autocomplete="off">
+      <div class="field-label">📅 تاریخ تولد (شمسی)</div>
+      <div class="birth-row">
+        <select id="birthDay" aria-label="روز تولد"></select>
+        <select id="birthMonth" aria-label="ماه تولد"></select>
+        <select id="birthYear" aria-label="سال تولد"></select>
+      </div>
+      <input id="ageInput" type="hidden">
+      <input id="cityInput" type="text" placeholder="شهر" maxlength="30" autocomplete="off">
+      <div class="field-label">✍️ بیوگرافی (الزامی)</div>
+      <textarea id="bioInput" class="ayv-textarea" rows="2" maxlength="150" placeholder="چند کلمه درباره‌ی خودت بنویس..."></textarea>
+      <div class="field-label">💞 وضعیت رابطه</div>
+      <select id="relationshipSelect" aria-label="وضعیت رابطه">
+        <option value="">انتخاب کن...</option>
+        <option value="سینگل">💚 سینگل</option>
+        <option value="رل دارم">💞 رل دارم</option>
+        <option value="اکس دارم">💔 اکس دارم</option>
+        <option value="متاهل">💍 ازدواج کرده‌ام</option>
+      </select>
+      <div class="field-label">⚧ جنسیت</div>
+      <div class="gender-row">
+        <button type="button" class="gender-btn" id="genderBoy">پسر</button>
+        <button type="button" class="gender-btn" id="genderGirl">دختر</button>
+      </div>
+      <div class="field-label">🎁 کد دعوت (اختیاری)</div>
+      <input id="inviteCodeInput" type="text" placeholder="اگه کسی دعوتت کرده، کدش رو اینجا بذار" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <div class="signup-note">🔒 نکته: شما می‌تونید در <b>تنظیمات ← حریم خصوصی</b> هر کدوم از این اطلاعات رو از بقیه‌ی کاربرها مخفی کنید.</div>
+      <button class="submit-btn" id="joinBtn">ادامه</button>
+      <div class="login-error" id="loginError"></div>
+      <p class="switch-link" id="showUsernameLoginBtn">قبلاً یوزرنیم ساختی؟ با یوزرنیم وارد شو</p>
+    </div>
+  </div>
+
+  <!-- ============ PASSWORD SCREEN (ثبت / ورود با رمز عبور) ============ -->
+  <div id="otpScreen" style="display:none;">
+    <div class="login-card">
+      <h1 id="otpTitle">🔒 رمز عبور</h1>
+      <p id="otpInfoText">یک رمز عبور برای حسابت انتخاب کن</p>
+      <input id="otpInput" type="password" placeholder="رمز عبور" maxlength="60" autocomplete="off">
+      <input id="otpConfirmInput" type="password" placeholder="تکرار رمز عبور" maxlength="60" autocomplete="off" style="display:none;">
+      <button class="submit-btn" id="otpVerifyBtn">ثبت‌نام و ورود</button>
+      <div class="login-error" id="otpError"></div>
+      <p class="switch-link" id="otpBackBtn">بازگشت و اصلاح اطلاعات</p>
+      <p class="switch-link ayv-forgot" id="forgotAccountLink2" style="display:none;">😶‍🌫️ فراموشی اکانت</p>
+    </div>
+  </div>
+
+  <!-- ============ USERNAME LOGIN SCREEN ============ -->
+  <div id="usernameLoginScreen" style="display:none;">
+    <div class="login-card">
+      <h1>🔑 ورود با یوزرنیم</h1>
+      <p>یوزرنیمت رو وارد کن تا مشخصاتت خودکار پر بشه</p>
+      <input id="usernameLoginInput" type="text" placeholder="یوزرنیم" maxlength="20" autocomplete="off">
+      <input id="usernameLoginPasswordInput" type="password" placeholder="رمز عبور" maxlength="60" autocomplete="off">
+      <button class="submit-btn" id="usernameLoginBtn">ورود</button>
+      <div class="login-error" id="usernameLoginError"></div>
+      <p class="switch-link" id="backToSignupBtn">یوزرنیم نداری؟ همین حالا ثبت‌نام کن</p>
+      <p class="switch-link ayv-forgot" id="forgotAccountLink">😶‍🌫️ فراموشی اکانت</p>
+    </div>
+  </div>
+
+  <!-- ============ WELCOME BACK SCREEN ============ -->
+  <div id="welcomeBackScreen" style="display:none;">
+    <div class="login-card">
+      <h1>👋 خوش برگشتی!</h1>
+      <p id="welcomeBackName"></p>
+      <button class="submit-btn" id="welcomeContinueBtn">ادامه و ورود به آیوین</button>
+      <p class="switch-link" id="welcomeNotMeBtn">من نیستم / کاربر دیگه‌ای هستم</p>
+    </div>
+  </div>
+
+  <!-- ============ PHONE VERIFY SCREEN (تایید شماره هنگام ثبت‌نام) ============ -->
+  <div id="phoneVerifyScreen" style="display:none;">
+    <div class="login-card">
+      <h1>📱 تایید شماره موبایل</h1>
+      <p id="pvInfo"></p>
+      <div id="pvPhoneStep">
+        <input id="pvPhone" type="tel" placeholder="شماره موبایل، مثل 09121234567" autocomplete="off" maxlength="11">
+        <button class="submit-btn" id="pvSendBtn">ارسال کد تایید</button>
+      </div>
+      <div id="pvCodeStep" style="display:none;">
+        <input id="pvCode" type="tel" placeholder="کد ۵ رقمی که پیامک شد" autocomplete="off" maxlength="5">
+        <button class="submit-btn" id="pvVerifyBtn">تایید و ورود</button>
+        <p class="switch-link" id="pvChangeLink">شماره اشتباهه؟ برگرد</p>
+      </div>
+      <div class="login-error" id="pvError"></div>
+      <p class="switch-link" id="pvLogoutLink">خروج / ورود با حساب دیگه</p>
+    </div>
+  </div>
+
+  <!-- ============ CHAT SCREEN ============ -->
+  <div id="chatScreen">
+    <header class="topbar">
+      <div class="brand">
+        <button class="back-btn" id="switcherBtn" title="بازگشت به صفحه اصلی">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <span class="avatar" id="convAvatar"></span>
+        <div class="conv-title-block">
+          <div class="conv-title-name" id="convTitleName">چت‌روم زنده</div>
+          <div class="conv-title-sub" id="convTitleSub"></div>
+          <div class="conv-title-bio" id="convTitleBio"></div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="call-btn" id="newGroupTopbarBtn" title="ساخت گروه جدید">👥</button>
+        <button class="call-btn" id="groupInfoBtn" title="اطلاعات گروه" style="display:none;">ℹ️</button>
+        <button class="call-btn" id="callBtn" title="تماس تصویری (گوگل میت)">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M15 8.5L20 5.5V18.5L15 15.5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><rect x="3" y="6" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg>
+        </button>
+        <button class="call-btn" id="searchBtn" title="جستجو در پیام‌ها">🔍</button>
+      </div>
+    </header>
+
+    <div class="search-bar" id="searchBar">
+      <button class="search-close" id="searchCloseBtn">✕</button>
+      <input id="searchInput" type="text" placeholder="جستجو در این گفتگو..." autocomplete="off">
+      <button class="search-close" id="semanticSearchBtn" title="جستجوی هوشمند">🧠</button>
+      <span class="search-count" id="searchCount"></span>
+    </div>
+    <div class="search-results-panel" id="searchResultsPanel"></div>
+
+    <div class="pinned-banner" id="pinnedBanner">
+      <span class="pb-icon">📌</span>
+      <div class="pb-body">
+        <div class="pb-text" id="pinnedBannerText"></div>
+      </div>
+      <button class="pb-unpin" id="pinnedUnpinBtn" title="برداشتن پین">✕</button>
+    </div>
+
+    <div style="position:relative; flex:1; min-height:0; display:flex;" id="chatAreaWrap">
+      <main class="chat-area" id="chatArea"></main>
+      <div class="drop-overlay" id="dropOverlay">📎 برای ارسال، رها کن</div>
+    </div>
+
+    <div id="blockBanner" style="display:none; padding:10px 16px; background:rgba(255,80,80,0.12); border-top:1px solid rgba(255,80,80,0.3); color:#ff8080; font-size:12.5px; text-align:center; flex-shrink:0;"></div>
+
+    <div class="reply-preview-bar" id="replyPreviewBar">
+      <div class="rpb-body">
+        <div class="rpb-name" id="rpbName"></div>
+        <div class="rpb-text" id="rpbText"></div>
+      </div>
+      <button class="rpb-close" id="rpbCloseBtn">✕</button>
+    </div>
+
+    <footer class="composer">
+      <div class="emoji-picker" id="emojiPicker"></div>
+      <input id="imgFileInput" type="file" accept="image/*" style="display:none">
+      <input id="docFileInput" type="file" accept=".pdf,.doc,.docx,.txt,.zip" style="display:none">
+      <input id="videoFileInput" type="file" accept="video/*" style="display:none">
+      <button id="micBtn" class="mic-btn" type="button" aria-label="پیام صوتی">🎤</button>
+      <button id="sendBtn" title="ارسال" aria-label="ارسال"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 3L3 10.5L10.5 13.5M21 3L13.5 21L10.5 13.5M21 3L10.5 13.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="composer-bar">
+        <div class="attach-wrap" id="attachWrap">
+          <button id="attachBtn" class="attach-btn" type="button" title="پیوست" aria-label="پیوست" aria-expanded="false">📎</button>
+          <div id="attachMenu" class="attach-menu" role="menu">
+          <button class="attach-option" id="attachImageOption" type="button" role="menuitem"><span class="attach-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg></span><span>تصویر</span></button>
+          <button class="attach-option" id="attachVideoOption" type="button" role="menuitem"><span class="attach-icon"><svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="M15.5 10.5l6-3.5v10l-6-3.5"/></svg></span><span>ویدئو</span></button>
+          <button class="attach-option" id="attachMusicOption" type="button" role="menuitem"><span class="attach-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></span><span>موسیقی</span></button>
+          <button class="attach-option" id="attachFileOption" type="button" role="menuitem"><span class="attach-icon"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></span><span>فایل</span></button>
+          <button class="attach-option" id="attachLocationOption" type="button" role="menuitem"><span class="attach-icon"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span>موقعیت مکانی</span></button>
+          <button class="attach-option" id="attachPollOption" type="button" role="menuitem"><span class="attach-icon"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></span><span>نظرسنجی</span></button>
+          </div>
+        </div>
+        <textarea id="msgInput" rows="1" maxlength="4000" placeholder="پیام بنویسید..." autocomplete="off" enterkeyhint="send"></textarea>
+        <button id="emojiBtn" class="emoji-btn" type="button" title="ایموجی">😊</button>
+      </div>
+      <button id="sendNoAiBtn" type="button" title="ارسال بدون جواب هوش مصنوعی" aria-label="ارسال بدون جواب هوش مصنوعی" style="display:none"><svg viewBox="0 0 24 24" fill="none"><path d="M21 3L3 10.5L10.5 13.5M21 3L13.5 21L10.5 13.5M21 3L10.5 13.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </footer>
+  </div>
+
+</div>
+
+<!-- ============ NEW GROUP MODAL (from inside chat) ============ -->
+<div class="modal-overlay" id="newGroupModal">
+  <div class="modal-card" style="text-align:right; max-width:340px;">
+    <h2 style="margin-bottom:14px; text-align:center;">👥 ساخت گروه جدید</h2>
+    <input id="newGroupNameInput" type="text" placeholder="اسم گروه (انگلیسی)" maxlength="30" autocomplete="off">
+    <input id="newGroupPasswordInput" type="text" placeholder="پسورد (اختیاری)" maxlength="30" autocomplete="off">
+    <input id="newGroupBioInput" type="text" placeholder="بیوگرافی گروه (الزامی)" maxlength="150" autocomplete="off">
+    <button type="button" class="modal-close ayv-pick" id="newGroupAvatarBtn" style="margin-top:0;margin-bottom:10px;">🖼️ عکس گروه (الزامی)</button>
+    <input id="newGroupAvatarFile" type="file" accept="image/*" style="display:none">
+    <div class="ai-select-label">دستیار هوش مصنوعی گروه (اختیاری)</div>
+    <select id="newGroupAiSelect"><option value="">— بدون هوش مصنوعی —</option></select>
+    <div class="login-error" id="newGroupError"></div>
+    <button class="submit-btn" id="newGroupCreateBtn">ساخت گروه</button>
+    <button class="modal-close" id="newGroupCancelBtn">انصراف</button>
+  </div>
+</div>
+
+<!-- ============ CALL MODAL (Google Meet) ============ -->
+<div class="modal-overlay" id="callModal">
+  <div class="modal-card" style="text-align:right; max-width:360px;">
+    <h2 style="margin-bottom:10px; text-align:center;">📞 تماس با گوگل میت</h2>
+    <p style="color:var(--muted); font-size:12.5px; line-height:1.9; margin-bottom:14px;">
+      یه تب گوگل میت برات باز شد و یه تماس جدید ساخته میشه.
+      لینک بالای صفحه‌ی میت رو کپی کن، اینجا بچسبون و بفرست تا برای
+      <b id="callTargetLabel" style="color:var(--text);">طرف مقابل</b> ارسال بشه.
+    </p>
+    <a href="https://meet.google.com/new" target="_blank" rel="noopener" class="call-open-link" id="callOpenMeetLink">🔗 باز کردن گوگل میت (اگه بسته شد)</a>
+    <input id="callLinkInput" type="text" placeholder="لینک meet.google.com رو اینجا بچسبون..." autocomplete="off">
+    <div class="login-error" id="callLinkError"></div>
+    <button class="call-send-btn" id="callLinkSendBtn">ارسال لینک تماس</button>
+    <button class="modal-close" id="callModalCancelBtn">انصراف</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="smsSettingsModal">
+  <div class="modal-card" style="text-align:right; max-width:360px;">
+    <h2 style="margin-bottom:10px; text-align:center;">📩 اعلان پیامکی</h2>
+    <p style="color:var(--muted); font-size:12.5px; line-height:1.9; margin-bottom:14px;">
+      شماره‌ات رو تایید کن تا هروقت پیام جدیدی برات اومد، یه پیامک بفرستیم بهت.
+    </p>
+
+    <div id="smsStatusBox" style="font-size:12.5px; margin-bottom:12px; line-height:1.8;"></div>
+
+    <div id="smsPhoneStep">
+      <input id="smsPhoneInput" type="tel" placeholder="شماره موبایل، مثل 09121234567" autocomplete="off" maxlength="11">
+      <div class="login-error" id="smsPhoneError"></div>
+      <button class="call-send-btn" id="smsSendCodeBtn">ارسال کد تایید</button>
+    </div>
+
+    <div id="smsCodeStep" style="display:none;">
+      <input id="smsCodeInput" type="tel" placeholder="کد ۵ رقمی که پیامک شد" autocomplete="off" maxlength="5">
+      <div class="login-error" id="smsCodeError"></div>
+      <button class="call-send-btn" id="smsVerifyCodeBtn">تایید و فعال‌سازی</button>
+      <div class="switch-link" id="smsChangePhoneLink">شماره اشتباهه؟ برگرد</div>
+    </div>
+
+    <button class="call-send-btn" id="smsDisableBtn" style="display:none; background:linear-gradient(135deg,#ff6b6b,#c0392b);">غیرفعال کردن اعلان پیامکی</button>
+
+    <button class="modal-close" id="smsSettingsCloseBtn">بستن</button>
+  </div>
+</div>
+
+<div class="msg-menu-backdrop" id="msgMenuBackdrop"></div>
+<div class="msg-menu" id="msgMenu">
+  <div class="msg-menu-emojis" id="msgMenuEmojis"></div>
+  <div class="msg-menu-item" id="menuReplyBtn">↩️ پاسخ</div>
+  <div class="msg-menu-item" id="menuForwardBtn">↪️ فوروارد</div>
+  <div class="msg-menu-item" id="menuSaveBtn">💾 ذخیره پیام</div>
+  <div class="msg-menu-item" id="menuCopyBtn">📋 کپی متن</div>
+  <div class="msg-menu-item" id="menuPinBtn">📌 پین کردن</div>
+  <div class="msg-menu-item" id="menuEditBtn">✏️ ویرایش</div>
+  <div class="msg-menu-item danger" id="menuReportMsgBtn">🚩 گزارش پیام</div>
+  <div class="msg-menu-item danger" id="menuDeleteBtn">🗑️ حذف</div>
+</div>
+
+<!-- ============ FORWARD MODAL ============ -->
+<div class="modal-overlay" id="forwardModal">
+  <div class="modal-card" style="text-align:right; max-width:360px;">
+    <h2 style="margin-bottom:10px; text-align:center;">↪️ فوروارد پیام</h2>
+    <p style="color:var(--muted); font-size:12px; margin-bottom:10px;">مقصد رو انتخاب کن:</p>
+    <div id="forwardTargetsList" style="max-height:320px; overflow-y:auto; margin-bottom:10px;"></div>
+    <div class="login-error" id="forwardError"></div>
+    <button class="modal-close" id="forwardCancelBtn">انصراف</button>
+  </div>
+</div>
+
+<!-- ============ SAVED MESSAGES MODAL ============ -->
+<div class="modal-overlay" id="savedMessagesModal">
+  <div class="modal-card" style="text-align:right; max-width:400px;">
+    <h2 style="margin-bottom:10px; text-align:center;">💾 پیام‌های ذخیره‌شده</h2>
+    <div id="savedMessagesList" style="max-height:400px; overflow-y:auto; margin-bottom:10px;"></div>
+    <button class="modal-close" id="savedMessagesCloseBtn">بستن</button>
+  </div>
+</div>
+
+<!-- ============ GROUP INFO MODAL ============ -->
+<div class="modal-overlay" id="groupInfoModal">
+  <div class="modal-card" style="text-align:right; max-width:400px;">
+    <div class="avatar big" id="groupInfoAvatar" style="margin:0 auto 10px;"></div>
+    <div class="profile-avatar-actions" id="groupAvatarActions" style="display:none;">
+      <button class="modal-close" id="groupChangeAvatarBtn" style="margin-top:0;">🖼️ تغییر عکس گروه</button>
+      <button class="modal-close" id="groupRemoveAvatarBtn" style="margin-top:0;">🗑️ حذف عکس</button>
+    </div>
+    <input class="profile-avatar-file" id="groupAvatarFile" type="file" accept="image/*">
+    <div class="login-error" id="groupAvatarError"></div>
+    <h2 style="margin-bottom:6px; text-align:center;" id="groupInfoTitle">👥 اطلاعات گروه</h2>
+    <p style="color:var(--muted); font-size:12px; text-align:center; margin-bottom:14px;" id="groupInfoSub"></p>
+
+    <div id="groupFeatureBox" style="margin-bottom:14px;"></div>
+    <div id="groupOwnerBox" style="display:none; margin-bottom:14px;">
+      <div class="ai-select-label">لینک دعوت گروه</div>
+      <div style="display:flex; gap:8px; margin-bottom:8px;">
+        <input id="groupInviteLinkInput" type="text" readonly placeholder="هنوز لینکی ساخته نشده" style="margin-bottom:0;">
+      </div>
+      <div style="display:flex; gap:8px; margin-bottom:6px;">
+        <button class="call-send-btn" id="groupInviteCreateBtn" style="margin-top:0;">ساخت/تجدید لینک</button>
+        <button class="modal-close" id="groupInviteCopyBtn" style="margin-top:0;">کپی</button>
+      </div>
+      <button class="modal-close" id="groupInviteRevokeBtn" style="color:#ff8080;">لغو لینک دعوت</button>
+    </div>
+
+    <div class="ai-select-label">اعضا</div>
+    <div id="groupMembersList" style="max-height:220px; overflow-y:auto; margin-bottom:10px;"></div>
+
+    <div class="login-error" id="groupInfoError"></div>
+    <button class="modal-close" id="groupReportBtn" style="color:#ff8080;">🚩 گزارش گروه</button>
+    <button class="modal-close" id="groupInfoCloseBtn">بستن</button>
+  </div>
+</div>
+
+<div class="lightbox-overlay" id="lightboxOverlay">
+  <img id="lightboxImg" src="">
+</div>
+
+<div class="recording-indicator" id="recordingIndicator">
+  <span class="rec-dot"></span>
+  <span id="recordingTimer">۰:۰۰</span> در حال ضبط... رها کن برای ارسال
+</div>
+
+<!-- ============ PROFILE MODAL ============ -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal-card">
+    <div class="avatar big" id="modalAvatar"></div>
+    <div class="profile-avatar-actions" id="profileAvatarActions" style="display:none;">
+      <button class="modal-close" id="changeAvatarBtn" style="margin-top:0;">🖼️ تغییر عکس</button>
+      <button class="modal-close" id="removeAvatarBtn" style="margin-top:0;">🗑️ حذف عکس</button>
+    </div>
+    <input class="profile-avatar-file" id="profileAvatarFile" type="file" accept="image/*">
+    <div class="login-error" id="profileAvatarError"></div>
+    <h2 id="modalName"></h2>
+    <div class="gender-tag" id="modalGender"></div>
+    <div class="pf-bio" id="modalBio" style="display:none;"></div>
+    <div class="modal-info-row"><span>شماره</span><span id="modalPhone"></span></div>
+    <div class="modal-info-row"><span>سن</span><span id="modalAge"></span></div>
+    <div class="modal-info-row"><span>شهر</span><span id="modalCity"></span></div>
+    <div id="modalBlockReportRow" style="display:none; gap:8px; margin-top:14px;">
+      <button class="modal-close" id="modalBlockBtn" style="flex:1; margin-top:0;">🚫 بلاک کردن</button>
+      <button class="modal-close" id="modalReportBtn" style="flex:1; margin-top:0; color:#ff8080;">🚩 گزارش</button>
+    </div>
+    <button class="call-send-btn" id="modalEditBtn" style="display:none;margin-top:14px;">✏️ ویرایش مشخصات</button>
+    <button class="modal-close" id="modalCloseBtn">بستن</button>
+  </div>
+</div>
+
+<!-- ============ REPORT MODAL ============ -->
+<div class="modal-overlay" id="reportModal">
+  <div class="modal-card" style="text-align:right; max-width:340px;">
+    <h2 style="margin-bottom:14px; text-align:center;">🚩 گزارش</h2>
+    <p id="reportTargetLabel" style="color:var(--muted); font-size:12.5px; margin-bottom:14px;"></p>
+    <select id="reportReasonSelect" style="width:100%; padding:13px 15px; border-radius:13px; border:1px solid rgba(255,255,255,0.09); background:var(--card2); color:var(--text); font-size:14px; outline:none; margin-bottom:10px; font-family:inherit;">
+      <option value="spam">هرزنامه / تبلیغات</option>
+      <option value="harassment">مزاحمت / آزار</option>
+      <option value="inappropriate">محتوای نامناسب</option>
+      <option value="other">دلیل دیگر</option>
+    </select>
+    <input id="reportDetailsInput" type="text" placeholder="توضیح بیشتر (اختیاری)" maxlength="300" autocomplete="off">
+    <div class="login-error" id="reportError"></div>
+    <button class="call-send-btn" id="reportSubmitBtn">ارسال گزارش</button>
+    <button class="modal-close" id="reportCancelBtn">انصراف</button>
+  </div>
+</div>
+
+<!-- ============ GENERIC APP DIALOG (replaces native alert/confirm) ============ -->
+<div class="modal-overlay" id="appDialogOverlay">
+  <div class="modal-card app-dialog-card">
+    <div class="app-dialog-msg" id="appDialogMsg"></div>
+    <div class="app-dialog-actions">
+      <button class="app-dialog-cancel" id="appDialogCancelBtn" style="display:none;">انصراف</button>
+      <button class="app-dialog-ok" id="appDialogOkBtn">باشه</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/00b-loader.js"></script>
+<script src="js/00a-cache.js"></script>
+<script src="js/00-config.js"></script>
+<script src="js/01-core.js"></script>
+<script src="js/02-realtime.js"></script>
+<script src="js/03-block-report.js"></script>
+<script src="js/04-ai-bots.js"></script>
+<script src="js/05-rooms.js"></script>
+<script src="js/06-home-tabs.js"></script>
+<script src="js/07-auth.js"></script>
+<script src="js/08-chat-switch.js"></script>
+<script src="js/09-msg-tools.js"></script>
+<script src="js/10-backend-bridge.js"></script>
+<script src="js/11-send-media.js"></script>
+<script src="js/12-roles-invite.js"></script>
+<script src="js/13-profile-keyboard.js"></script>
+<script src="js/14-channels.js"></script>
+<script src="js/meet-config.js"></script>
+<script src="js/15-meet-panel.js"></script>
+<script src="js/16-jitsi-call.js"></script>
+<script src="js/17-onboarding.js"></script>
+<script src="js/18-features.js"></script>
+<script src="js/19-explore-invite.js"></script>
+<script src="js/20-page-follow.js"></script>
+<script src="js/21-group-leave-delete.js"></script>
+<script src="js/22-hard-delete.js"></script>
+<script src="js/23-offline-outbox.js"></script>
+<script src="js/24-earnings.js"></script>
+<script src="js/25-chatlist.js"></script>
+<script src="js/99-guard.js"></script>
+<script>tryAutoLogin();</script>
+</body>
+</html>

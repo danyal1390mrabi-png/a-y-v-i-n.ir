@@ -1,0 +1,155 @@
+/* ============================================================
+   آیوین — لیست گفتگوی تلگرام‌مانند
+   ============================================================ */
+
+/* ردیف گفتگو */
+.cl-row { position: relative; }
+.cl-row .room-info,
+.cl-row .switcher-item-info { min-width: 0; }
+
+/* ستون چپ: ساعت + تیک + شمارنده */
+.cl-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;      /* در RTL یعنی سمت چپ */
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 44px;
+  align-self: stretch;
+}
+.cl-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  direction: ltr;
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.cl-time { direction: rtl; }
+.cl-tick {
+  font-size: 11px;
+  letter-spacing: -2px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.cl-tick.read { color: var(--accent); }
+
+/* شمارنده‌ی پیام‌های خوانده‌نشده */
+.cl-badge {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 22px;
+  text-align: center;
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px #2b8aff55;
+}
+
+/* خط دوم: آخرین پیام */
+.cl-sub {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.cl-you { color: var(--accent); font-weight: 600; }
+.cl-new { color: var(--accent); font-weight: 800; }
+.cl-txt { color: var(--muted); }
+.cl-unread .cl-txt { color: var(--text); font-weight: 600; }
+.cl-unread .switcher-item-name,
+.cl-unread .room-name { color: var(--text); }
+
+/* گفتگوی بازِ فعلی */
+.room-item.active,
+.room-item.cl-active { background: #2b8aff1a; }
+
+/* ---------- دکمه‌ی شناور مدادی ---------- */
+.home-shell { position: relative; }
+#clFab {
+  display: none;
+  position: absolute;
+  left: 18px;
+  bottom: calc(var(--safe-b, 0px) + 84px);
+  width: 58px;
+  height: 58px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #1f6feb);
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 30;
+  box-shadow: 0 10px 26px #1f6feb66, 0 2px 6px #0006;
+  transition: transform .15s ease, box-shadow .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+#clFab:active { transform: scale(.92); }
+#homeSectionChats.active ~ #clFab { display: flex; }
+
+/* ---------- شیت «گفتگوی جدید» ---------- */
+.cl-sheet-bg {
+  position: fixed;
+  inset: 0;
+  background: #0008;
+  z-index: 10050;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+.cl-sheet-bg.show { opacity: 1; }
+.cl-sheet {
+  width: 100%;
+  max-width: 520px;
+  background: var(--card);
+  border-radius: 22px 22px 0 0;
+  padding: 10px 14px calc(16px + var(--safe-b, 0px));
+  transform: translateY(40px);
+  transition: transform .2s ease;
+  box-shadow: 0 -10px 40px #0007;
+}
+.cl-sheet-bg.show .cl-sheet { transform: none; }
+.cl-grip {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: #ffffff33;
+  margin: 2px auto 10px;
+}
+.cl-sheet button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 10px;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: right;
+}
+.cl-sheet button:active { background: #ffffff12; }
+.cl-sheet .cl-ico {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+}

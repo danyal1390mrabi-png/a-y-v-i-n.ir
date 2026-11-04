@@ -1,0 +1,73 @@
+/* آیوین — استایل قابلیت‌های نسخه‌ی ۲ */
+
+/* ذخیره‌ی پیام حذف شد */
+#menuSaveBtn{display:none!important}
+
+/* فیلدهای جدید */
+.ayv-textarea{width:100%;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.09);background:var(--card2);color:var(--text);font:inherit;font-size:15px;outline:none;margin-bottom:11px;resize:none;line-height:1.8;direction:rtl;text-align:right}
+.ayv-textarea:focus{border-color:var(--accent)}
+.ayv-pick{margin-top:0;margin-bottom:11px}
+.ayv-pick.has-file{background:rgba(34,197,94,.16);color:#6ee7a0}
+
+/* بیوگرافی */
+.pf-bio{font-size:13.5px;line-height:1.9;color:var(--text);background:var(--card2);border-radius:14px;padding:10px 13px;margin:10px 0 6px;text-align:right;white-space:pre-wrap;word-break:break-word}
+.conv-title-bio{font-size:10.5px;color:var(--muted);opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:62vw;line-height:1.5}
+.conv-title-bio:empty{display:none}
+.conv-title-block{cursor:pointer}
+#convAvatar{cursor:pointer}
+#modalAvatar.has-photo{cursor:zoom-in}
+.feature-bio{font-size:14px;line-height:1.9;text-align:center;color:var(--text);margin:0 0 10px;white-space:pre-wrap;word-break:break-word}
+
+/* ویدیوی پست */
+.pf-post-video{display:block;width:100%;max-height:260px;border-radius:12px;background:#000;margin-bottom:8px}
+
+/* دکمه‌های ارسال با/بدون هوش مصنوعی */
+#sendNoAiBtn{width:46px;height:46px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:0;cursor:pointer;flex-shrink:0;position:relative;opacity:.95}
+#sendNoAiBtn svg{width:20px;height:20px;opacity:.85}
+#sendNoAiBtn::after{content:"🚫";position:absolute;bottom:-3px;left:-3px;font-size:13px;line-height:1}
+footer.composer.ai-room #sendBtn{position:relative}
+footer.composer.ai-room #sendBtn::after{content:"🤖";position:absolute;bottom:-4px;left:-4px;font-size:14px;line-height:1}
+footer.composer.ai-room{gap:6px}
+
+/* نوار مشاهده‌ی بدون عضویت */
+.ayv-preview-bar,.channel-readonly-bar{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;text-align:center}
+.ayv-preview-bar{padding:12px 14px;background:#090e1ad9;border-top:1px solid rgba(255,255,255,.06);font-size:12.5px;color:var(--muted);flex-shrink:0;padding-bottom:calc(12px + var(--safe-b))}
+.ayv-join-btn{border:none;border-radius:12px;padding:9px 18px;background:linear-gradient(135deg,var(--accent2),#16a34a);color:#06170d;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+.ayv-join-btn:disabled{opacity:.6}
+
+/* فراموشی اکانت */
+.ayv-forgot{margin-top:10px;color:var(--accent)}
+.ayv-acct-pick{display:flex;align-items:center;gap:10px;padding:10px;border-radius:14px;background:var(--card2);margin-bottom:8px;cursor:pointer;text-align:right}
+.ayv-acct-pick:active{opacity:.8}
+
+/* ویرایش مشخصات / حذف حساب */
+.ayv-edit-row{display:flex;gap:8px}
+.ayv-edit-row select{flex:1;min-width:0}
+.ayv-modal input,.ayv-modal select,.ayv-modal textarea{width:100%;padding:12px 14px;border-radius:13px;border:1px solid rgba(255,255,255,.09);background:var(--card2);color:var(--text);font:inherit;font-size:15px;outline:none;margin-bottom:10px}
+.ayv-modal .field-label{margin-top:4px}
+.ayv-danger-box{background:rgba(255,80,80,.1);border:1px solid rgba(255,80,80,.3);color:#ff9a9a;border-radius:14px;padding:12px 14px;font-size:12.5px;line-height:1.9;margin-bottom:12px}
+.ayv-btn-danger{background:linear-gradient(135deg,#ff6b6b,#c0392b)!important;color:#fff!important}
+.ayv-phone-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ayv-phone-row .ayv-phone-val{flex:1;padding:12px 14px;border-radius:13px;background:var(--card2);direction:ltr;text-align:left;font-size:15px}
+.ayv-phone-row button{width:auto;margin:0;padding:11px 14px;font-size:12.5px}
+
+/* درباره‌ی آیوین */
+.ab-hero{text-align:center;padding:6px 0 14px}
+.ab-logo{font-size:46px;line-height:1;margin-bottom:6px;filter:drop-shadow(0 6px 14px rgba(43,138,255,.45))}
+.ab-name{font-size:24px;font-weight:800;background:linear-gradient(90deg,#22d3ee,#60a5fa,#a78bfa,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ab-tag{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.9}
+.ab-wow{width:100%;margin:12px 0 4px;padding:13px;border:none;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#2563eb 55%,#06b6d4);color:#fff;font:inherit;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 10px 26px rgba(79,70,229,.45)}
+.ab-wow:active{transform:scale(.97)}
+.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.ab-item{background:var(--card2);border-radius:16px;padding:12px 10px;text-align:right}
+.ab-item .ab-ic{font-size:22px;margin-bottom:4px}
+.ab-item .ab-t{font-size:12.5px;font-weight:800;margin-bottom:3px}
+.ab-item .ab-d{font-size:11px;line-height:1.8;color:var(--muted)}
+.ab-foot{text-align:center;font-size:11px;color:var(--muted);margin-top:12px}
+.ab-pop{position:fixed;z-index:100000;pointer-events:none;font-size:26px;animation:abPop 1.6s ease-out forwards}
+@keyframes abPop{0%{transform:translateY(0) scale(.4);opacity:0}15%{opacity:1}100%{transform:translateY(-70vh) scale(1.4) rotate(25deg);opacity:0}}
+.call-guide-alt{margin-top:14px}
+.call-guide-desc{font-size:12.5px;line-height:1.95;color:var(--muted);margin:0 0 10px}
+
+/* کانال‌های من در لیست گفتگوها */
+.channel-card.my-channel{cursor:pointer}
